@@ -1,0 +1,61 @@
+name: Build and Push to ECR
+
+on:
+  push:
+    branches:
+      - main
+
+# Required for OIDC token retrieval
+permissions:
+  id-token: write   # Allows the workflow to request an OIDC token from GitHub
+  contents: read    # Allows actions/checkout to read the repo
+
+env:
+  AWS_REGION: eu-west-1
+  ECR_REPOSITORY: helloapp
+  IMAGE_TAG: Bruce_Mutsinzi_helloapp
+
+jobs:
+  build-and-push:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::842676015206:role/helloapp-github-actions-role
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set image tag (commit SHA for immutability)
+        id: image-tag
+        run: |
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+          echo "TAG=${{ env.IMAGE_NAME }}-${SHORT_SHA}" >> $GITHUB_OUTPUT
+          echo "Tag will be: ${{ env.IMAGE_NAME }}-${SHORT_SHA}"
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ env.ECR_REPOSITORY }}:${{ steps.image-tag.outputs.TAG }} .
+
+      - name: Tag image for ECR
+        run: |
+          docker tag ${{ env.ECR_REPOSITORY }}:${{ steps.image-tag.outputs.TAG }} \
+            ${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ steps.image-tag.outputs.TAG }}
+
+      - name: Push image to ECR
+        run: |
+          docker push ${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ steps.image-tag.outputs.TAG }}
+
+      - name: Output image URI
+        run: |
+          echo "✅ Image successfully pushed to:"
+          echo "${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ steps.image-tag.outputs.TAG }}"
+          echo "${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest"

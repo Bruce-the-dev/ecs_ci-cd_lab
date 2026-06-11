@@ -1,0 +1,42 @@
+# Maven build output
+target/
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Logs
+*.log
+logs/
+
+# Local environment files
+.env
+.env.local
+*.env
+
+# Docker files (don't need them inside the image)
+Dockerfile
+.dockerignore
+
+# CI/CD files
+.github/
+
+# Documentation
+README.md
+*.md
+
+# Test reports
+test-output/

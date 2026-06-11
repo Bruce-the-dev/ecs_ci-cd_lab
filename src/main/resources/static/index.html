@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CloudOps Deployment Hub</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(-45deg,#0f172a,#1e293b,#0ea5e9,#8b5cf6);
+    background-size:400% 400%;
+    animation:gradientMove 15s ease infinite;
+    color:white;
+}
+
+@keyframes gradientMove{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+.card{
+    position:relative;
+    z-index:2;
+    width:90%;
+    max-width:750px;
+    padding:3rem;
+    text-align:center;
+
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,0.15);
+    border-radius:30px;
+
+    box-shadow:
+        0 0 40px rgba(14,165,233,0.2),
+        0 0 80px rgba(139,92,246,0.15);
+}
+
+h1{
+    font-size:3.5rem;
+    margin-bottom:0.5rem;
+    background:linear-gradient(90deg,#38bdf8,#c084fc);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.subtitle{
+    font-size:1.3rem;
+    opacity:.9;
+    margin-bottom:2rem;
+}
+
+.badges{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.badge{
+    padding:10px 20px;
+    border-radius:999px;
+    background:rgba(255,255,255,0.12);
+    border:1px solid rgba(255,255,255,0.15);
+    transition:.3s;
+}
+
+.badge:hover{
+    transform:translateY(-4px);
+    background:rgba(255,255,255,0.2);
+}
+
+.pipeline{
+    margin-top:2rem;
+    font-size:1rem;
+    opacity:.85;
+}
+
+.clock{
+    margin-top:2rem;
+    font-size:1.1rem;
+    color:#cbd5e1;
+}
+
+/* Floating circles */
+
+.circle{
+    position:absolute;
+    border-radius:50%;
+    background:rgba(255,255,255,0.08);
+    animation:float 18s infinite linear;
+}
+
+.circle:nth-child(1){
+    width:250px;
+    height:250px;
+    top:-80px;
+    left:-80px;
+}
+
+.circle:nth-child(2){
+    width:180px;
+    height:180px;
+    bottom:-50px;
+    right:-50px;
+    animation-duration:22s;
+}
+
+@keyframes float{
+    0%{
+        transform:rotate(0deg) translateY(0px);
+    }
+    50%{
+        transform:rotate(180deg) translateY(20px);
+    }
+    100%{
+        transform:rotate(360deg) translateY(0px);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="circle"></div>
+<div class="circle"></div>
+
+<div class="card">
+    <h1>Bruce Mutsinzi</h1>
+
+    <div class="subtitle">
+        🚀 CloudOps Deployment Hub
+    </div>
+
+    <div class="badges">
+        <div class="badge">AWS Fargate</div>
+        <div class="badge">GitHub Actions</div>
+        <div class="badge">CodePipeline</div>
+        <div class="badge">Blue/Green Deployments</div>
+    </div>
+
+    <div class="pipeline">
+        GitHub → ECR → CodePipeline → ECS → Production
+    </div>
+
+    <div class="clock" id="clock"></div>
+</div>
+
+<script>
+function updateClock(){
+    const now = new Date();
+    document.getElementById('clock').innerHTML =
+        now.toLocaleString();
+}
+setInterval(updateClock,1000);
+updateClock();
+</script>
+
+</body>
+</html>
