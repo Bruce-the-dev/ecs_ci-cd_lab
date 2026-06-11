@@ -13,7 +13,7 @@ permissions:
 env:
   AWS_REGION: eu-west-1
   ECR_REPOSITORY: helloapp
-  IMAGE_TAG: Bruce_Mutsinzi_helloapp
+  IMAGE_NAME: Bruce_Mutsinzi_helloapp
 
 jobs:
   build-and-push:
@@ -36,11 +36,9 @@ jobs:
 
       - name: Set image tag (commit SHA for immutability)
         id: image-tag
-        env:
-          IMAGE_NAME: ${{ env.IMAGE_NAME }}
         run: |
           SHORT_SHA="${GITHUB_SHA:0:7}"
-          TAG="${IMAGE_NAME}-${SHORT_SHA}"
+          TAG="${{ env.IMAGE_NAME }}-${SHORT_SHA}"
           echo "TAG=${TAG}" >> "$GITHUB_OUTPUT"
           echo "Tag will be: ${TAG}"
 
@@ -61,4 +59,4 @@ jobs:
         run: |
           echo "✅ Image successfully pushed to:"
           echo "${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ steps.image-tag.outputs.TAG }}"
-          echo "${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest"
+        
