@@ -36,10 +36,15 @@ jobs:
 
       - name: Set image tag (commit SHA for immutability)
         id: image-tag
-        run: |
-          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
-          echo "TAG=${{ env.IMAGE_NAME }}-${SHORT_SHA}" >> $GITHUB_OUTPUT
-          echo "Tag will be: ${{ env.IMAGE_NAME }}-${SHORT_SHA}"
+        run: echo "TAG=${{ env.IMAGE_NAME }}-${GITHUB_SHA:0:7}" >> "$GITHUB_OUTPUT"
+        
+        # env:
+        #   IMAGE_NAME: ${{ env.IMAGE_NAME }}
+        # run: |
+        #   SHORT_SHA="${GITHUB_SHA:0:7}"
+        #   TAG="${IMAGE_NAME}-${SHORT_SHA}"
+        #   echo "TAG=${TAG}" >> "$GITHUB_OUTPUT"
+        #   echo "Tag will be: ${TAG}"
 
       - name: Build Docker image
         run: |
