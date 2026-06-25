@@ -41,6 +41,15 @@ jobs:
         run: |
           docker push ${{ steps.ecr-login.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:latest
 
+      - name: Package deployment artifacts
+        run: |
+            zip deployment-artifacts.zip taskdef.json appspec.yaml
+
+      - name: Upload deployment artifacts to S3
+        run: |
+          aws s3 cp deployment-artifacts.zip \
+            s3://${{ vars.DEPLOYMENT_ARTIFACTS_BUCKET }}/deployment-artifacts.zip
+      
       - name: Output image URI
         run: |
           echo "✅ Image pushed:"
